@@ -41,6 +41,10 @@ export class PostEdition implements OnInit {
   keyDouble: boolean = false;
   is_selected:boolean = false;
   selected_image:string = '';
+  double_click:boolean = false;
+  style_selected_image:string = '';
+  index_picto_to_delete:number = 0;
+  clicked = false;
 
   constructor(public languageService: LanguageService,
               public editionService: EditionService,
@@ -53,8 +57,8 @@ export class PostEdition implements OnInit {
 
   pictos = [
     6536,
-    6536,
-    6536
+    2608,
+    5465
   ];
 
   onSubmit(formText: NgForm) {
@@ -173,12 +177,18 @@ export class PostEdition implements OnInit {
   select(image: string,index: number) {
     this.editionService.imageSelected[index] = image;
     this.is_selected = true;
-    this.selected_image = image.split('/')[image.length - 1];
+    let tabImage: any[] = image.split('/')
+    this.selected_image = tabImage[tabImage.length - 1];
   }
 
   addPicto(){
     console.log(this.selected_image);
     this.pictos.push(Number(this.selected_image));
+  }
+
+  set_width_translation_box(pictos: number[]){
+    let num_pictos = pictos.length
+    return String(num_pictos * 150 + 150)
   }
 
   // dataRegister(data: HTMLInputElement) {
@@ -306,4 +316,14 @@ export class PostEdition implements OnInit {
   // update_progress_bar(){
   //   return this.id_sentence / this.get_number_sentences()
   // }
+  doubleClick(index_picto:number) {
+    this.clicked = false
+    this.double_click = true
+    this.style_selected_image = 'border: 5px solid #555;'
+    this.index_picto_to_delete = index_picto
+  }
+
+  deletePicto() {
+    this.pictos.splice(this.index_picto_to_delete, 1)
+  }
 }

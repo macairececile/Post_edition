@@ -28,12 +28,13 @@
           </div>
         </div>
         <br />
-        <div cdkDropList cdkDropListOrientation="horizontal" class="example-list" (cdkDropListDropped)="drop($event)">
-          <div class="example-box" *ngFor="let sentence of pictos" cdkDrag>
-          <img src="http://lig-interaactionpicto.imag.fr/api/p/arasaac/{{sentence}}" alt="" height="150px" width="150px">
-          </div>
+        <div cdkDropList cdkDropListOrientation="horizontal" class="example-list" [style.width]="set_width_translation_box(pictos)" (cdkDropListDropped)="drop($event)">
+            <div class="example-box" *ngFor="let sentence of pictos" cdkDrag>
+                <img [style]="style_selected_image" src="http://lig-interaactionpicto.imag.fr/api/p/arasaac/{{sentence}}" alt="" height="150px" width="150px" (click)="doubleClick(pictos.indexOf(sentence))">
+            </div>
         </div>
-          <button type="button" class="margin-right" mat-raised-button color="warn" (click)="printPictos()"> Print </button>
+          <button *ngIf="double_click" [disabled]="clicked" (click)="deletePicto(); clicked=true" class="btn btn-warning float-right ml-2">Supprimer</button>
+<!--          <button type="button" class="margin-right" mat-raised-button color="warn" (click)="printPictos()"> Print </button>-->
         <br/><br/>
         <h2 class="display-4">Rechercher un mot</h2>
           <form (ngSubmit)="onSubmit(formText)" #formText="ngForm">
