@@ -29,8 +29,8 @@
         </div>
         <br />
         <div cdkDropList cdkDropListOrientation="horizontal" class="example-list" [style.width]="set_width_translation_box(pictos)" (cdkDropListDropped)="drop($event)">
-            <div class="example-box" *ngFor="let sentence of pictos" cdkDrag>
-                <img [style]="style_selected_image" src="http://lig-interaactionpicto.imag.fr/api/p/arasaac/{{sentence}}" alt="" height="150px" width="150px" (click)="doubleClick(pictos.indexOf(sentence))">
+            <div class="example-box" *ngFor="let sentence of pictos;let index = index" cdkDrag>
+                <img [style]="pictosStyles[index]" src="http://lig-interaactionpicto.imag.fr/api/p/arasaac/{{sentence}}" alt="" height="150px" width="150px" (click)="doubleClick(pictos.indexOf(sentence))">
             </div>
         </div>
           <button *ngIf="double_click" [disabled]="clicked" (click)="deletePicto(); clicked=true" class="btn btn-warning float-right ml-2">Supprimer</button>
@@ -41,7 +41,7 @@
               <div>
                   <mat-form-field class="widthTextarea" appearance="fill">
                     <textarea matInput type="text" placeholder="{{'translatePicto.typeAWord' | translate}}"
-                  id="sentence-input" name="text" ngModel required rows="10" (keyup.enter)="onSubmit(formText)"></textarea>
+                  id="sentence-input" name="text" ngModel required rows="5" (keyup.enter)="onSubmit(formText)"></textarea>
                   </mat-form-field>
                   <br>
                   <button class="margin-right" type="submit" mat-raised-button color="primary"

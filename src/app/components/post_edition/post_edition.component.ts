@@ -46,6 +46,18 @@ export class PostEdition implements OnInit {
   index_picto_to_delete:number = 0;
   clicked = false;
 
+  pictos = [
+    6536,
+    2608,
+    5465
+  ];
+
+  pictosStyles = [
+      "",
+      "",
+      ""
+  ];
+
   constructor(public languageService: LanguageService,
               public editionService: EditionService,
               public saveData: SaveDataService,
@@ -54,12 +66,6 @@ export class PostEdition implements OnInit {
   ngOnInit(): void {
     this.editionService.isSearch = false;
   }
-
-  pictos = [
-    6536,
-    2608,
-    5465
-  ];
 
   onSubmit(formText: NgForm) {
     this.resetRequest();
@@ -184,6 +190,7 @@ export class PostEdition implements OnInit {
   addPicto(){
     console.log(this.selected_image);
     this.pictos.push(Number(this.selected_image));
+    this.pictosStyles.push("");
   }
 
   set_width_translation_box(pictos: number[]){
@@ -319,8 +326,18 @@ export class PostEdition implements OnInit {
   doubleClick(index_picto:number) {
     this.clicked = false
     this.double_click = true
-    this.style_selected_image = 'border: 5px solid #555;'
     this.index_picto_to_delete = index_picto
+
+    if (this.pictosStyles[index_picto] === "") {
+      this.resetStyle();
+      this.pictosStyles[index_picto] = 'border: 5px solid #555;';
+    }else {
+      this.pictosStyles[index_picto]= "";
+    }
+  }
+
+  resetStyle(){
+    this.pictosStyles.fill("");
   }
 
   deletePicto() {
