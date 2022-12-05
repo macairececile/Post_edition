@@ -29,6 +29,7 @@ import {RouterModule} from "@angular/router";
 import { VersionComponent } from './components/version/version.component';
 import { Observable } from 'rxjs';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {Quit} from "./components/quit/quit.component";
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, '/assets/i18n/', '.json');
 }
@@ -38,6 +39,7 @@ export function createTranslateLoader(http: HttpClient) {
     AppComponent,
     HomeComponent,
     PostEdition,
+    Quit,
     NavbarComponent,
     TranslatePictoComponent,
     DialogMaxWordsComponent,

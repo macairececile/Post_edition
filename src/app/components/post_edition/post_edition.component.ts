@@ -12,6 +12,8 @@ declare var getUrlPicto:any;
 declare var getTokensForTS:any;
 declare var getKeyPicto:any;
 declare var clearUrlImageJS:any;
+declare var setDataTS:any;
+declare var mkdirJ:any;
 
 export interface Sentences{
   sentence: string,
@@ -26,8 +28,9 @@ export interface Sentences{
 
 export class PostEdition implements OnInit {
 
-  progress_bar_val: number = 0;
-  id_sentence:number = 0;
+  num_sentences: number = 10;
+  id_sentence:number = 1;
+  progress_bar_style:string = '';
   sentences: Sentences[] = [];
   result:string[][] = [];
   displayResult:string[][] = [];
@@ -42,14 +45,17 @@ export class PostEdition implements OnInit {
   is_selected:boolean = false;
   selected_image:string = '';
   double_click:boolean = false;
-  style_selected_image:string = '';
   index_picto_to_delete:number = 0;
   clicked = false;
+  clicked_add = false;
+  sentence_to_translate: string = '';
+
 
   constructor(public languageService: LanguageService,
               public editionService: EditionService,
               public saveData: SaveDataService,
-              public dialog: MatDialog) { }
+              public dialog: MatDialog,
+              private router: Router) { }
 
   ngOnInit(): void {
     this.editionService.isSearch = false;
@@ -59,6 +65,12 @@ export class PostEdition implements OnInit {
     6536,
     2608,
     5465
+  ];
+
+  pictosStyles = [
+    "",
+    "",
+    ""
   ];
 
   onSubmit(formText: NgForm) {
@@ -134,35 +146,6 @@ export class PostEdition implements OnInit {
     this.keyDouble = false;
   }
 
-  // Download( url: any, filename: any ) {
-  //   let setFetching = false;
-  //   let setError = false;
-  //
-  //   const download = (url: RequestInfo, name: string | any[]) => {
-  //     if (!url) {
-  //       throw new Error("Resource URL not provided! You need to provide one");
-  //     }
-  //     setFetching =true;
-  //     fetch(url)
-  //         .then(response => response.blob())
-  //         .then(blob => {
-  //           setFetching =false;
-  //           const blobURL = URL.createObjectURL(blob);
-  //           const a = document.createElement("a");
-  //           a.href = blobURL;
-  //
-  //           if (name && name.length) if (typeof name === "string") {
-  //             a.download = name;
-  //           }
-  //           document.body.appendChild(a);
-  //           a.click();
-  //         })
-  //         .catch(() => setError = true);
-  //   };
-  //
-  //   download(url,filename);
-  // }
-
   openDialog(){
     this.dialog.open(DialogMaxWordsComponent, {
       height: '20%',
@@ -179,21 +162,20 @@ export class PostEdition implements OnInit {
     this.is_selected = true;
     let tabImage: any[] = image.split('/')
     this.selected_image = tabImage[tabImage.length - 1];
+    this.clicked_add = false;
   }
 
   addPicto(){
     console.log(this.selected_image);
     this.pictos.push(Number(this.selected_image));
+    this.clicked_add = true;
+    this.pictosStyles.push("");
   }
 
   set_width_translation_box(pictos: number[]){
-    let num_pictos = pictos.length
-    return String(num_pictos * 150 + 150)
+    let num_pictos = pictos.length;
+    return String(num_pictos * 150 + 150);
   }
-
-  // dataRegister(data: HTMLInputElement) {
-  //   this.dataRegisterChecked = data.checked;
-  // }
 
   private debug() {
     console.log('result : ', this.editionService.result);
@@ -205,6 +187,7 @@ export class PostEdition implements OnInit {
     }
     return text;
   }
+
   //duplication par clé
   duplicateCaseKey(keys :string[][]){
     this.keyDoublon(keys);
@@ -270,10 +253,6 @@ export class PostEdition implements OnInit {
     moveItemInArray(this.pictos, event.previousIndex, event.currentIndex);
   }
 
-  set_progress_bar(progress_val:number){
-    this.progress_bar_val = progress_val
-  }
-
   goLoad(nameFile: string){
     // @ts-ignore
     this.sentences = (function () {
@@ -292,11 +271,6 @@ export class PostEdition implements OnInit {
     })();
   }
 
-  // getSentence(json:string){
-  //   this.goLoad("sentences.json")
-  //   return this.sentences[0].sentence
-  // }
-
   getPictos(){
     this.goLoad("sentences.json")
     let id_pictos = this.sentences[0].pictos.split(',')
@@ -308,22 +282,49 @@ export class PostEdition implements OnInit {
     console.log('keys : ', pictos.keys());
   }
 
-
   // get_number_sentences(){
   //   return sentences.sentences_list.length
   // }
 
-  // update_progress_bar(){
-  //   return this.id_sentence / this.get_number_sentences()
-  // }
   doubleClick(index_picto:number) {
     this.clicked = false
     this.double_click = true
-    this.style_selected_image = 'border: 5px solid #555;'
     this.index_picto_to_delete = index_picto
+
+    if (this.pictosStyles[index_picto] === "") {
+      this.resetStyle();
+      this.pictosStyles[index_picto] = 'border: 5px solid #555;';
+    }else {
+      this.pictosStyles[index_picto]= "";
+    }
+  }
+
+  resetStyle(){
+    this.pictosStyles.fill("");
   }
 
   deletePicto() {
     this.pictos.splice(this.index_picto_to_delete, 1)
+    this.resetStyle()
+  }
+
+  set_progress_bar(){
+    let progress = this.id_sentence / this.num_sentences * 100;
+    this.progress_bar_style = 'width: ' + progress.toString() + '%;';
+    return progress.toString()
+  }
+
+  saveUsersDataToServer(){
+    this.printPictos()
+    let urlPictoDataSelected : string[] = JSON.parse(JSON.stringify(this.pictos));
+    const data = [this.sentence_to_translate, urlPictoDataSelected];
+    setDataTS(data);
+    console.log('data : ', JSON.stringify(data));
+    mkdirJ();
+  }
+
+  quitStudy(): void {
+    this.saveUsersDataToServer();
+    this.router.navigate(['quit']);
   }
 }

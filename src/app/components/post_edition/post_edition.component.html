@@ -13,40 +13,39 @@
       <div class="shadow-lg p-4 mb-5 bg-white rounded">
         <div class="container-fluid">
           <div class="row">
-            <div class="col-1">
-              <h1 class="display-4 text-left">1 -</h1>
-            </div>
             <div class="col-7">
-              <h1 class="display-4">Vous avez beaucoup de chance</h1>
+              <h1 class="display-4">1 - Vous avez beaucoup de chance</h1>
             </div>
-            <div class="col mt-2">
-<!--              <mat-progress-bar mode="determinate" [value]="update_progress_bar()"></mat-progress-bar>-->
+            <div class="col">
               <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
+                <div class="progress-bar" role="progressbar" [style]="progress_bar_style" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{set_progress_bar()}}%</div>
               </div>
             </div>
           </div>
         </div>
         <br />
         <div cdkDropList cdkDropListOrientation="horizontal" class="example-list" [style.width]="set_width_translation_box(pictos)" (cdkDropListDropped)="drop($event)">
-            <div class="example-box" *ngFor="let sentence of pictos" cdkDrag>
-                <img [style]="style_selected_image" src="http://lig-interaactionpicto.imag.fr/api/p/arasaac/{{sentence}}" alt="" height="150px" width="150px" (click)="doubleClick(pictos.indexOf(sentence))">
+            <div class="example-box" *ngFor="let sentence of pictos;let index = index" cdkDrag>
+                <img [style]="pictosStyles[index]" src="http://lig-interaactionpicto.imag.fr/api/p/arasaac/{{sentence}}" alt="" height="150px" width="150px" (click)="doubleClick(pictos.indexOf(sentence))">
             </div>
         </div>
-          <button *ngIf="double_click" [disabled]="clicked" (click)="deletePicto(); clicked=true" class="btn btn-warning float-right ml-2">Supprimer</button>
-<!--          <button type="button" class="margin-right" mat-raised-button color="warn" (click)="printPictos()"> Print </button>-->
-        <br/><br/>
+          <br />
+          <button *ngIf="double_click" [disabled]="clicked" (click)="deletePicto(); clicked=true" class="btn btn-warning float-left">Supprimer</button>
+          <button class="btn btn-dark float-right ml-1" type="submit"
+                  (click)="quitStudy()"> Quitter </button>
+          <button class="btn btn-success float-right" type="submit"
+                  (click)="saveUsersDataToServer()"> Valider la traduction </button>
+        <br/><br/><br/>
         <h2 class="display-4">Rechercher un mot</h2>
           <form (ngSubmit)="onSubmit(formText)" #formText="ngForm">
               <div>
                   <mat-form-field class="widthTextarea" appearance="fill">
                     <textarea matInput type="text" placeholder="{{'translatePicto.typeAWord' | translate}}"
-                  id="sentence-input" name="text" ngModel required rows="10" (keyup.enter)="onSubmit(formText)"></textarea>
+                  id="sentence-input" name="text" ngModel required rows="2" (keyup.enter)="onSubmit(formText)"></textarea>
                   </mat-form-field>
                   <br>
-                  <button class="margin-right" type="submit" mat-raised-button color="primary"
-                          [disabled]="formText.invalid"> {{'translatePicto.submit' | translate}} </button>
-                  <button type="button" class="margin-right" mat-raised-button color="warn" (click)="erase()"> Effacer </button>
+                  <button class="margin-right btn btn-primary" type="submit" [disabled]="formText.invalid"> {{'translatePicto.submit' | translate}} </button>
+                  <button type="button" class="margin-right btn btn-danger" (click)="erase()"> Effacer </button>
               </div>
               <br>
               <div *ngFor="let carousel of result;let index = index">
@@ -56,9 +55,8 @@
                           <img [ngClass]="{'borderColorGreen': this.editionService.imageSelected.indexOf(image) != -1}" src="{{image}}" width="100%" height="100%" alt="image" (click)="select(image,index)">
                       </div>
                   </carousel>
-<!--                   à changer de position-->
-                  <button *ngIf="this.is_selected" class="margin-right" type="submit" mat-raised-button color="primary"
-                          (click)="addPicto()"> {{'translatePicto.select' | translate}} </button>
+                  <button *ngIf="this.is_selected" class="btn btn-primary float-right" type="submit" [disabled]="clicked_add"
+                          (click)="addPicto(); clicked_add=true"> {{'translatePicto.select' | translate}} </button>
                   <div class="middle" *ngIf="carousel[0] === 'http://lig-interaactionpicto.imag.fr/api/p/arasaac/10056'">
                       Aucun pictogramme n'a été trouvé pour ce mot
                   </div>
