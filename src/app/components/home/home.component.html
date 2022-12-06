@@ -1,21 +1,30 @@
 <div class="container-fluid" xmlns="http://www.w3.org/1999/html">
 <div class="card">
   <div class="card-header text-center bg-info text-white">
-    <h1>Post-édition des traductions en pictogrammes proposées</h1>
+    <h1>Post-édition de phrases traduites en pictogrammes ARASAAC</h1>
   </div>
   <div class="card-body">
+    <h2 class="text-left">Présentation de la tâche</h2>
+    <p class="text-justify">
+      La tâche que nous vous présentons est une tâche de post-édition, qui consiste à vérifier les traductions proposées par un outil.<br>
+      À l'écran, vous serons proposés des phrases suivies de leur traduction en pictogrammes ARASAAC. Votre but est simplement de les corriger.
+      Les instructions sont données à la page suivante.<br>
+      Ce travail est intégré au projet de thèse de Cécile MACAIRE, intitulé "Traduction automatique de la parole vers des pictogrammes".
+      Le but est de transcrire la parole en une séquence de pictogrammes. Cette thèse est financée par le projet PROPICTO, décrit ci-dessous.
+    </p>
     <h2 class="text-left">Projet PROPICTO</h2>
-    <p class="text-justify">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a sodales est, a aliquam tellus. Donec id nisi blandit, efficitur nunc et, placerat tortor. Nullam finibus massa arcu, vel tempus urna elementum mollis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed bibendum libero, id venenatis turpis. Proin ultrices libero ut tortor euismod posuere. Integer rhoncus dui quis tellus ultricies, sit amet gravida risus semper. Sed euismod nunc in elit tincidunt, quis ornare sem condimentum. In diam turpis, condimentum vel ipsum et, congue venenatis nisi. Vestibulum vitae ante eleifend ante finibus venenatis. Praesent hendrerit nisi in massa lobortis, non congue ante pulvinar. Etiam massa mauris, dictum vitae tincidunt quis, elementum ac velit. Morbi malesuada, sem sed convallis sollicitudin, mi risus mollis est, scelerisque ornare massa mauris sit amet neque.
+    <p class="text-justify">
+      PROPICTO est un projet bilatéral franco-suisse, financé respectivement par l'Agence Nationale française pour la Recherche (ANR) et le Fonds National Suisse de la recherche scientifique (FNS). Ce programme de recherche de 4 ans est mené en collaboration entre le Département de Technologie de la Traduction (TIM) de l'Université de Genève et le Groupe d'Étude de la Traduction Automatique et du Traitement Automatique des Langues et de la Parole (GETALP), rattaché au Laboratoire d'Informatique de Grenoble (LIG).
+      L'objectif global de PROPICTO (PRojection du langage Oral vers des unités PICTOgraphiques) est de créer des systèmes de traduction permettant de convertir de la parole en une séquence de pictogrammes.
+      Ces systèmes permettront ainsi d'améliorer l'accès à la communication pour les non-francophones (allophones) ou les personnes en situation de handicap langagier pour communiquer avec leur proche, et le personnel médical.
     </p>
-    <h2 class="text-left">Protection des données</h2>
-    <p class="text-justify">Suspendisse potenti. Suspendisse vel feugiat turpis, in ornare sapien. Nullam fermentum nunc quis tellus condimentum pretium. Nam quis volutpat velit. Pellentesque fermentum porta sapien at tincidunt. Donec pretium lectus enim, vel luctus sem sagittis ut. Curabitur accumsan egestas enim, efficitur varius nibh egestas ut. Mauris condimentum justo leo. Aenean suscipit et metus eu porttitor. Etiam id quam eu diam ultrices lobortis.
-      Donec egestas lorem vel dolor tincidunt ullamcorper. Duis ultrices lacus in felis gravida varius. Suspendisse vel tempor lorem. Nunc imperdiet diam convallis lectus vestibulum sagittis. Vestibulum at erat a sem semper lacinia vel tristique augue. In ac auctor arcu. Curabitur accumsan eros ac suscipit commodo. Cras dolor orci, condimentum quis luctus id, tincidunt non odio. Donec sollicitudin mauris sit amet feugiat pharetra
-    </p>
+    <br>
+    <p class="text-justify">Aucune donnée personnelle n'est récupérée. Pour toutes questions relatives au projet, vous pouvez nous contacter à l'adresse suivante : <strong>corpuspropicto@univ-grenoble-alpes.fr</strong></p>
     <div class="custom-control custom-checkbox float-right">
       <input type="checkbox" (change)="toggleEditable($event)" class="custom-control-input" id="customCheck1">
-      <label class="custom-control-label" for="customCheck1">J'ai bien lu les conditions et ...</label>
+      <label class="custom-control-label" for="customCheck1">J'ai lu et j'accepte les termes et conditions</label>
     </div><br/><br/>
-    <button (click)="goToPage()" class="btn btn-success float-right ml-2">Suivant</button>
+    <button (click)="goToPage()" class="btn btn-success float-right ml-2">Commencer</button>
   </div>
   <div class="card-footer text-muted">
     <div class="row">
@@ -30,6 +39,5 @@
     </div>
   </div>
 </div>
-  <app-layout></app-layout>
 </div>
 

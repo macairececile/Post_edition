@@ -7,6 +7,7 @@ import {SaveDataService} from "../../services/save-data.service";
 import {MatDialog} from "@angular/material/dialog";
 import {NgForm} from "@angular/forms";
 import {DialogMaxWordsComponent} from "../dialog-max-words/dialog-max-words.component";
+
 declare var monitorInput:any;
 declare var getUrlPicto:any;
 declare var getTokensForTS:any;
@@ -28,8 +29,9 @@ export interface Sentences{
 
 export class PostEdition implements OnInit {
 
-  num_sentences: number = 10;
-  id_sentence:number = 1;
+  num_sentences: number = 0;
+  sentence:string = '';
+  id_sentence:number = 0;
   progress_bar_style:string = '';
   sentences: Sentences[] = [];
   result:string[][] = [];
@@ -46,10 +48,11 @@ export class PostEdition implements OnInit {
   selected_image:string = '';
   double_click:boolean = false;
   index_picto_to_delete:number = 0;
-  clicked = false;
-  clicked_add = false;
-  sentence_to_translate: string = '';
-
+  clicked:boolean = false;
+  clicked_add:boolean = false;
+  pictos:number[] = [];
+  pictosStyles:string[] = [];
+  pictosVisibility:boolean[] = [];
 
   constructor(public languageService: LanguageService,
               public editionService: EditionService,
@@ -59,19 +62,13 @@ export class PostEdition implements OnInit {
 
   ngOnInit(): void {
     this.editionService.isSearch = false;
+    this.goLoad("sentences.json");
+    this.get_number_sentences();
+    this.getPictos(this.sentences[0].pictos)
+    this.pictosStyles = new Array(this.get_number_picto_in_sentence()).fill("");
+    this.pictosVisibility = new Array(this.num_sentences).fill(true)
+    this.pictosVisibility[0] = false
   }
-
-  pictos = [
-    6536,
-    2608,
-    5465
-  ];
-
-  pictosStyles = [
-    "",
-    "",
-    ""
-  ];
 
   onSubmit(formText: NgForm) {
     this.resetRequest();
@@ -117,21 +114,6 @@ export class PostEdition implements OnInit {
       this.debug();
     },500);
   }
-
-  // chooseBank(arasaac: HTMLInputElement, mulberry: HTMLInputElement) {
-  //   if(!arasaac.checked){
-  //     this.banksChecked = this.banksChecked.filter((bank) => bank != arasaac.value);
-  //   }
-  //   if(!mulberry.checked){
-  //     this.banksChecked = this.banksChecked.filter((bank) => bank != mulberry.value);
-  //   }
-  //   if(arasaac.checked){
-  //     this.banksChecked.push(arasaac.value);
-  //   }
-  //   if(mulberry.checked){
-  //     this.banksChecked.push(mulberry.value);
-  //   }
-  // }
 
   resetRequest(){
     clearUrlImageJS();
@@ -271,20 +253,19 @@ export class PostEdition implements OnInit {
     })();
   }
 
-  getPictos(){
-    this.goLoad("sentences.json")
-    let id_pictos = this.sentences[0].pictos.split(',')
-    return id_pictos
+  getPictos(sentence_picto:string){
+    this.pictos = sentence_picto.split(',').map(function(item) {
+      return parseInt(item, 10)});
+    console.log(this.pictos);
   }
 
-  printPictos(){
-    let pictos = this.getPictos()
-    console.log('keys : ', pictos.keys());
+  get_number_sentences(){
+    this.num_sentences = this.sentences.length;
   }
 
-  // get_number_sentences(){
-  //   return sentences.sentences_list.length
-  // }
+  get_number_picto_in_sentence(){
+    return this.pictos.length
+  }
 
   doubleClick(index_picto:number) {
     this.clicked = false
@@ -308,23 +289,38 @@ export class PostEdition implements OnInit {
     this.resetStyle()
   }
 
-  set_progress_bar(){
-    let progress = this.id_sentence / this.num_sentences * 100;
+  set_progress_bar(index: number){
+    let progress = index / this.num_sentences * 100;
+    console.log(progress)
     this.progress_bar_style = 'width: ' + progress.toString() + '%;';
     return progress.toString()
   }
 
-  saveUsersDataToServer(){
-    this.printPictos()
+  saveUsersDataToServer(index: number, sentence:string){
     let urlPictoDataSelected : string[] = JSON.parse(JSON.stringify(this.pictos));
-    const data = [this.sentence_to_translate, urlPictoDataSelected];
+    const data = [sentence, urlPictoDataSelected];
     setDataTS(data);
     console.log('data : ', JSON.stringify(data));
     mkdirJ();
   }
 
-  quitStudy(): void {
-    this.saveUsersDataToServer();
+  goToNextTask(index: number, sentence:string, pictos:string){
+    this.saveUsersDataToServer(index, sentence);
+    if (index + 2 > this.num_sentences){
+      this.router.navigate(['quit']);
+    }
+    else{
+      this.pictosVisibility.fill(true);
+      this.pictosVisibility[index+1] = false;
+      this.getPictos(pictos);
+      this.id_sentence = index+1
+      this.set_progress_bar(this.id_sentence+1);
+      this.pictosStyles = new Array(this.get_number_picto_in_sentence()).fill("")
+    }
+  }
+
+  quitStudy(index: number, sentence:string): void {
+    this.saveUsersDataToServer(index, sentence);
     this.router.navigate(['quit']);
   }
 }

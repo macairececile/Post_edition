@@ -2,23 +2,33 @@
   <div class="card">
 <!--Header-->
     <div class="card-header text-center bg-info text-white">
-      <h1>Post-édition des traductions en pictogrammes proposées</h1>
+      <h1>Post-édition de phrases traduites en pictogrammes ARASAAC</h1>
     </div>
 <!--Body-->
     <div class="card-body">
       <h2 class="text-left">Instructions</h2>
-      <p class="text-justify">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a sodales est, a aliquam tellus. Donec id nisi blandit, efficitur nunc et, placerat tortor. Nullam finibus massa arcu, vel tempus urna elementum mollis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed bibendum libero, id venenatis turpis. Proin ultrices libero ut tortor euismod posuere. Integer rhoncus dui quis tellus ultricies, sit amet gravida risus semper. Sed euismod nunc in elit tincidunt, quis ornare sem condimentum. In diam turpis, condimentum vel ipsum et, congue venenatis nisi. Vestibulum vitae ante eleifend ante finibus venenatis. Praesent hendrerit nisi in massa lobortis, non congue ante pulvinar. Etiam massa mauris, dictum vitae tincidunt quis, elementum ac velit. Morbi malesuada, sem sed convallis sollicitudin, mi risus mollis est, scelerisque ornare massa mauris sit amet neque.
+      <p class="text-justify">
+          Un total de {{num_sentences}} phrases vous sont présentées. La barre en haut à droite permet de visualiser votre progression.
+          En dessous de la phrase présentée, sa traduction en pictogrammes ARASAAC.
+          Vous pouvez changer la position d'un pictogramme en le sélectionnant avec la souris.
+          Vous pouvez également supprimer un pictogramme en cliquant dessus. Il sera alors entouré d'une bordure grise et un bouton "Supprimer" apparaitra.
+          Enfin, il est possible d'ajouter un pictogramme.
+          Pour cela, renseignez un mot dans la barre de recherche. Il suffit ensuite de sélectionner le pictogramme voulut puis l'ajouter en cliquant sur le bouton "Ajouter".
+          Si aucun pictogramme n'est disponible, un message d'erreur s'affichera.
+          Chaque phrase est présentée une par une. Pour passer à la suivante, cliquez sur "Valider la traduction".
+          Il est possible de quitter la tâche à tout moment, en cliquant sur le bouton "Quitter".
       </p>
       <br/>
-      <div class="shadow-lg p-4 mb-5 bg-white rounded">
+        <div *ngFor="let s of sentences; let index = index">
+      <div class="shadow-lg p-4 mb-5 bg-white rounded" [hidden]="pictosVisibility[index]">
         <div class="container-fluid">
           <div class="row">
             <div class="col-7">
-              <h1 class="display-4">1 - Vous avez beaucoup de chance</h1>
+              <h1 class="display-4">{{index + 1}} - {{s.sentence}}</h1>
             </div>
             <div class="col">
               <div class="progress">
-                <div class="progress-bar" role="progressbar" [style]="progress_bar_style" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{set_progress_bar()}}%</div>
+                <div class="progress-bar" role="progressbar" [style]="progress_bar_style" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{set_progress_bar(id_sentence)}}%</div>
               </div>
             </div>
           </div>
@@ -32,9 +42,9 @@
           <br />
           <button *ngIf="double_click" [disabled]="clicked" (click)="deletePicto(); clicked=true" class="btn btn-warning float-left">Supprimer</button>
           <button class="btn btn-dark float-right ml-1" type="submit"
-                  (click)="quitStudy()"> Quitter </button>
+                  (click)="quitStudy(index, s.sentence)"> Quitter </button>
           <button class="btn btn-success float-right" type="submit"
-                  (click)="saveUsersDataToServer()"> Valider la traduction </button>
+                  (click)="goToNextTask(index, s.sentence, s.pictos)"> Valider la traduction </button>
         <br/><br/><br/>
         <h2 class="display-4">Rechercher un mot</h2>
           <form (ngSubmit)="onSubmit(formText)" #formText="ngForm">
@@ -64,6 +74,7 @@
               </div>
           </form>
       </div>
+    </div>
     </div>
 <!--footer-->
     <div class="card-footer text-muted">
